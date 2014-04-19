@@ -1,9 +1,11 @@
+<!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8" />
 <title>Modquilt</title>
 <link rel="stylesheet" type="text/css" href="modquilt.css" />
 <script type="text/javascript" src="modquilt.js" ></script>
+<script type="text/javascript" src="d3/d3.min.js"></script>
 </head>
 
 <body onload="trigger(1);">
@@ -14,5 +16,6 @@
         <button onclick="trigger(1);" title="forward">&gt;&gt;</button>
     </span>
   </div>
+  <svg id="quilt" preserveAspectRatio="meet"></svg>
 </body>
 </html>
