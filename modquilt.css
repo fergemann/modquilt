@@ -1,0 +1,34 @@
+body {
+    background: black;
+}
+div {
+    color: white;
+    text-shadow: black 2px 2px 1px, black -2px 2px 1px, black -2px -2px 1px, black 2px -2px 1px, black 0px 2px 1px, black 2px 0px 1px, black 0px -2px 1px, black -2px 0px 1px;
+    text-align: center;
+}
+#modulus {
+    font-size: 200px;
+    font-weight: bold;
+    margin: auto;
+    cursor: pointer;
+}
+span#buttons {
+    background-color: #aaa;
+    border-radius: 2em;
+    padding: 1em;
+    margin-left: auto;
+    margin-right: auto;
+}
+button {
+    border-radius: 1em;
+    padding: 0.5em;
+    cursor: pointer;
+    border: none;
+    background: none;
+}
+button#hover {
+    background: yellow;
+}
+button span {
+    cursor: pointer;
+}
