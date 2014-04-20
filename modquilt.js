@@ -18,6 +18,10 @@ var newshadow = function(c,pix,blur) {
     return ret + "0px 0px";
 }
 
+var mod = function(n, m) {
+    return ((n % m) + m) % m;
+}
+
 var trigger = function(off) {
     var oldRows = rows;
     m = (m + off - min)%((max-min)+1) + min;
@@ -36,10 +40,10 @@ var trigger = function(off) {
         data = []
         if (y < rows) {
             for (var x = 0; x < rows; x++) {
-                data.push({x:x, y:y, color: x * y % m})
-                data.push({x:x, y:-y, color: x * y % m})
-                data.push({x:-x, y:y, color: x * y % m})
-                data.push({x:-x, y:-y, color: x * y % m})
+                data.push({x:x, y:y})
+                data.push({x:x, y:-y})
+                data.push({x:-x, y:y})
+                data.push({x:-x, y:-y})
             }
         }
         rects = d3.select("#quilt").selectAll("rect.row"+y)
@@ -57,7 +61,7 @@ var trigger = function(off) {
             .attr("width", 1)
             .attr("height", 1)
             .style("opacity",1)
-            .style("fill", function(d) { return colors[d.color] });    
+            .style("fill", function(d) { return colors[mod(d.x*d.y, m)] });    
         rects.exit()
             .transition()
             .duration(transitionTime)
