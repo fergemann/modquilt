@@ -2,8 +2,6 @@ body {
     background: black;
 }
 div {
-    color: white;
-    text-shadow: black 2px 2px 1px, black -2px 2px 1px, black -2px -2px 1px, black 2px -2px 1px, black 0px 2px 1px, black 2px 0px 1px, black 0px -2px 1px, black -2px 0px 1px;
     text-align: center;
 }
 #modulus {
@@ -11,6 +9,8 @@ div {
     font-weight: bold;
     margin: auto;
     cursor: pointer;
+    color: white;
+    text-shadow: black 2px 2px 1px, black -2px 2px 1px, black -2px -2px 1px, black 2px -2px 1px, black 0px 2px 1px, black 2px 0px 1px, black 0px -2px 1px, black -2px 0px 1px;
 }
 span#buttons {
     background-color: #aaa;
@@ -41,5 +41,14 @@ svg#quilt {
     z-index: -1;
     background: gray;
 }
-rect {
-}   
+#squareInfo {
+    min-width: 8em;
+    padding: 1px 4px;
+    opacity: 0;
+    background: #ffffff;
+    position: absolute;
+    border-radius: .4em;
+    pointer-events: none;
+    border: 1px solid #888888;
+    font-family: sans-serif;
+}

@@ -14,7 +14,25 @@ var operators = {
     "*": function(a, b, m) { return NT.mod(a*b, m) },
     "^": function(a, b, m) { return NT.powMod(a, b, m) }
 }
-var operator = operators["*"];
+
+var operator = "*";
+
+var squareDivHtml = function(a, b, m) {
+    switch(operator) {
+        case "+":
+            return a + " + " + b + " &equiv; " + operators["+"](a,b,m) + " mod " + m;
+        case "*":
+            return a + " &times; " + b + " &equiv; " + 
+                   operators["*"](a,b,m) + " mod " + m;
+        case "^":
+            var c = operators["^"](a,b,m);
+            if (isNaN(c)) {
+                return a + '<sup>' + b  + '</sup> is undefined mod ' + m;
+            } else {
+                return a + '<sup>' + b + '</sup> &equiv; ' + c + " mod " + m;
+            }
+    }
+}
 
 var newshadow = function(c,pix,blur) {
     var ret = '';
@@ -27,11 +45,10 @@ var newshadow = function(c,pix,blur) {
 }
 
 var chooseOperator = function(op) {
-    operator = operators[op];
+    operator = op;
     trigger(0);
 }
     
-
 var trigger = function(off) {
     var oldRows = rows;
     m = (m + off - min)%((max-min)+1) + min;
@@ -45,7 +62,8 @@ var trigger = function(off) {
         .duration(transitionTime)
         .attr("viewBox", -(gridSize+1)/2 + " " + -(gridSize+1)/2 
                           + " " + (gridSize+1) + " " + (gridSize+1));
-        
+    var infoDiv = d3.select("#squareInfo");
+    
     for (var y = 0;  y < Math.max(rows, oldRows); y++) {
         data = []
         if (y < rows) {
@@ -77,7 +95,26 @@ var trigger = function(off) {
             .attr("width", 1)
             .attr("height", 1)
             .style("opacity",1)
-            .style("fill", function(d) { return colors[operator(d.x, d.y, m)] });    
+            .style("fill", function(d) { return colors[operators[operator](d.x, d.y, m)] });
+        rects.on("mouseover", function (d) {
+                //prevent info div from falling off page
+                var left = d3.event.pageX;
+                if ((left + infoDiv[0][0].clientWidth) > window.innerWidth) {
+                    left = left - infoDiv[0][0].clientWidth;
+                }
+                infoDiv.transition()
+                    .delay(500)
+                    .duration(200)
+                    .style("opacity", .9)
+                    .style("left", left + "px")
+                    .style("top", (d3.event.pageY - infoDiv[0][0].clientHeight) + "px")
+                    .each("start", function() {infoDiv.html(squareDivHtml(d.x, d.y, m))});
+            })
+            .on("mouseout", function (d) {
+                infoDiv.transition()
+                    .duration(400)
+                    .style("opacity", 0)
+            });  
         rects.exit()
             .transition()
             .duration(transitionTime)
