@@ -1,12 +1,20 @@
 var min = 2;
 var max = 11;
-var colors = ['#000000','#ffffff','#000060','#ff6657','#00800f','#dd7500','#1000b0','#7020a0','#c00020','#b040a0','#808080'];
+var colors = ['#000000','#ffffff','#000060','#ff6657','#00800f','#dd7500','#1000b0','#7020a0','#c00020','#b040a0','#ddcc00'];
+colors[NaN] = '#808080';
+
 var invcolors = ['#ffffff','#000000','#ffffbf','#0088a8','#ff7ff0','#009aff','#ffff7f','#4f2fcf','#2fbfdf','#4fbf5f','#000000'];
 
 var m = 11;
-var gridSize = 40;  // approximate number of squares across and down
+var gridSize = 46;  // approximate number of squares across and down
 var transitionTime = 1000;
 var rows = 0;
+var operators = {
+    "+": function(a, b, m) { return NT.mod(a+b, m) },
+    "*": function(a, b, m) { return NT.mod(a*b, m) },
+    "^": function(a, b, m) { return NT.powMod(a, b, m) }
+}
+var operator = operators["*"];
 
 var newshadow = function(c,pix,blur) {
     var ret = '';
@@ -18,9 +26,11 @@ var newshadow = function(c,pix,blur) {
     return ret + "0px 0px";
 }
 
-var mod = function(n, m) {
-    return ((n % m) + m) % m;
+var chooseOperator = function(op) {
+    operator = operators[op];
+    trigger(0);
 }
+    
 
 var trigger = function(off) {
     var oldRows = rows;
@@ -40,20 +50,26 @@ var trigger = function(off) {
         data = []
         if (y < rows) {
             for (var x = 0; x < rows; x++) {
-                data.push({x:x, y:y})
-                data.push({x:x, y:-y})
-                data.push({x:-x, y:y})
-                data.push({x:-x, y:-y})
+                data.push({x:x, y:y});
+                if (y > 0) {
+                    data.push({x:x, y:-y});
+                }
+                if (x > 0) {
+                    data.push({x:-x, y:y});
+                    if (y > 0) {
+                        data.push({x:-x, y:-y});
+                    }
+                }
             }
         }
-        rects = d3.select("#quilt").selectAll("rect.row"+y)
+        rects = d3.select("#quilt g").selectAll("rect.row"+y)
             .data(data);
         rects.enter()
             .append("rect")
             .attr("class", "row"+y)
-            .style("opacity",0);
 //             .attr("x", function(d) { return 4*d.x })
-//             .attr("y", function(d) { return 4*d.y });
+//             .attr("y", function(d) { return 4*d.y })
+            .style("opacity",0);
         rects.transition()
             .duration(transitionTime)
             .attr("x",function(d) { return d.x-.5; })
@@ -61,7 +77,7 @@ var trigger = function(off) {
             .attr("width", 1)
             .attr("height", 1)
             .style("opacity",1)
-            .style("fill", function(d) { return colors[mod(d.x*d.y, m)] });    
+            .style("fill", function(d) { return colors[operator(d.x, d.y, m)] });    
         rects.exit()
             .transition()
             .duration(transitionTime)

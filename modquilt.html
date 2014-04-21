@@ -6,6 +6,7 @@
 <link rel="stylesheet" type="text/css" href="modquilt.css" />
 <script type="text/javascript" src="modquilt.js" ></script>
 <script type="text/javascript" src="d3/d3.min.js"></script>
+<script type="text/javascript" src="NT.js"></script>
 </head>
 
 <body onload="trigger(1);">
@@ -13,9 +14,12 @@
   <div>
     <span id="buttons">
         <button onclick="trigger(-1);" title="back">&lt;&lt;</button> 
+        <button onclick="chooseOperator('+');" title="plus">+</button>
+        <button onclick="chooseOperator('*');" title="times">*</button>
+        <button onclick="chooseOperator('^');" title="power">^</button>
         <button onclick="trigger(1);" title="forward">&gt;&gt;</button>
     </span>
   </div>
-  <svg id="quilt" preserveAspectRatio="meet"></svg>
+  <svg id="quilt" preserveAspectRatio="meet"><g transform="scale(1,-1)"></g></svg>
 </body>
 </html>
