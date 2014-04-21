@@ -1,11 +1,19 @@
 body {
-    background: black;
+    background: #808080;
+    padding: 0;
+    margin: 0;
 }
 div {
     text-align: center;
 }
+#controls {
+    width: 200px;
+    text-align: center;s
+    margin-left: 0;
+    margin-top: 40px;
+}
 #modulus {
-    font-size: 200px;
+    font-size: 140px;
     font-weight: bold;
     margin: auto;
     cursor: pointer;
@@ -13,33 +21,43 @@ div {
     text-shadow: black 2px 2px 1px, black -2px 2px 1px, black -2px -2px 1px, black 2px -2px 1px, black 0px 2px 1px, black 2px 0px 1px, black 0px -2px 1px, black -2px 0px 1px;
 }
 span#buttons {
-    background-color: #aaa;
-    border-radius: 2em;
-    padding: 1em;
+    background-color: #bbb;
+    border-radius: 1em;
+    padding: .5em;
     margin-left: auto;
     margin-right: auto;
 }
 button {
-    border-radius: 1em;
-    padding: 0.5em;
+    min-width: 2em;
+    font-size: 12px;
+    padding: 2px 4px;
+    margin: 0;
     cursor: pointer;
-    border: none;
+    border: 1px solid transparent;
     background: none;
+    font-weight: bold;
+    border-radius: 4px;
 }
-button#hover {
-    background: yellow;
+button:hover {
+    background: #ffff66;
+    border-color: #111111;
+}
+button:active {
+    background: #dddd00;
+    border-color: #111111;
 }
 button span {
     cursor: pointer;
 }
-svg#quilt {
-    width: 100%;
-    height: 100%;
+#quiltDiv {
     position: absolute;
     top: 0;
-    left: 0;
-    z-index: -1;
-    background: gray;
+    bottom: 0;
+    left: 200px;
+    right: 0;
+}
+svg#quilt {
+    height: 100%;
 }
 #squareInfo {
     min-width: 8em;
@@ -51,4 +69,8 @@ svg#quilt {
     pointer-events: none;
     border: 1px solid #888888;
     font-family: sans-serif;
+}
+.selectedOperator {
+    border-color: #111111;
+    background: white;
 }

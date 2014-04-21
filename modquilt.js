@@ -7,7 +7,7 @@ var invcolors = ['#ffffff','#000000','#ffffbf','#0088a8','#ff7ff0','#009aff','#f
 
 var m = 11;
 var gridSize = 46;  // approximate number of squares across and down
-var transitionTime = 1000;
+var transitionTime = 500;
 var rows = 0;
 var operators = {
     "+": function(a, b, m) { return NT.mod(a+b, m) },
@@ -26,10 +26,11 @@ var squareDivHtml = function(a, b, m) {
                    operators["*"](a,b,m) + " mod " + m;
         case "^":
             var c = operators["^"](a,b,m);
+            var aParen = (a < 0) ? '('+a+')' : a
             if (isNaN(c)) {
-                return a + '<sup>' + b  + '</sup> is undefined mod ' + m;
+                return aParen + '<sup>' + b  + '</sup> is undefined mod ' + m;
             } else {
-                return a + '<sup>' + b + '</sup> &equiv; ' + c + " mod " + m;
+                return aParen + '<sup>' + b + '</sup> &equiv; ' + c + " mod " + m;
             }
     }
 }
@@ -50,6 +51,9 @@ var chooseOperator = function(op) {
 }
     
 var trigger = function(off) {
+    d3.selectAll(".selectedOperator").classed("selectedOperator", false);
+    buttonIds = {"+":"#plusButton", "*":"#timesButton", "^":"#powerButton"}
+    d3.select(buttonIds[operator]).classed("selectedOperator", true);
     var oldRows = rows;
     m = (m + off - min)%((max-min)+1) + min;
     if (m < min) {

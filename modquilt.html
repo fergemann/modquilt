@@ -10,17 +10,21 @@
 </head>
 
 <body onload="trigger(1);">
-  <div id="modulus"> </div>
-  <div>
-    <span id="buttons">
-        <button onclick="trigger(-1);" title="back">&lt;&lt;</button> 
-        <button onclick="chooseOperator('+');" title="plus">+</button>
-        <button onclick="chooseOperator('*');" title="times">*</button>
-        <button onclick="chooseOperator('^');" title="power">^</button>
-        <button onclick="trigger(1);" title="forward">&gt;&gt;</button>
-    </span>
+  <div id="controls"> 
+  <div id="modulus" onclick="trigger(1);"> </div>
+    <div>
+      <span id="buttons">
+          <button onclick="trigger(-1);" title="back">&lt;&lt;</button> 
+          <button id="plusButton" onclick="chooseOperator('+');" title="addition">+</button>
+          <button id="timesButton" onclick="chooseOperator('*');" title="multiplication">&times;</button>
+          <button id="powerButton" onclick="chooseOperator('^');" title="exponentiaion">^</button>
+          <button onclick="trigger(1);" title="forward">&gt;&gt;</button>
+      </span>
+    </div>
   </div>
-  <svg id="quilt" preserveAspectRatio="meet"><g transform="scale(1,-1)"></g></svg>
+  <div id="quiltDiv">
+    <svg id="quilt" preserveAspectRatio="xMinYMin meet"><g transform="scale(1,-1)"></g></svg>
+  </div>
   <div id="squareInfo"></div>
 </body>
 </html>
