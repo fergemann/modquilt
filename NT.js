@@ -39,7 +39,9 @@ var NT = {
     },
     
     powMod: function(base, exp, m) {
+        if (exp == 0 && base == 0) return NaN;
         if (exp == 0) return 1;
+        if (exp > 0 && base == 0) return 0;
         if (exp < 0) { 
             var i = NT.inv(base,m);
             if (i == NaN) return NaN;
