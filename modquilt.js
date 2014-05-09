@@ -1,13 +1,14 @@
 /* global document, window, d3, NT */
 /* exported chooseOperator, trigger */
 var min = 2;
-var max = 11;
-var colors = ['#000000','#ffffff','#000060','#ff6657','#00800f','#dd7500',
-              '#1000b0','#7020a0','#c00020','#b040a0','#ddcc00'];
+var max = 13;
+var colors = ['#000000', '#ffffff', '#000060', '#ff6657', '#00800f',
+              '#dd7500', '#1000b0', '#7020a0', '#c00020', '#b040a0',
+              '#ddcc00', '#c0c0c0', '#4060d0'];
 colors[NaN] = '#808080';
 
-var m = 10;
-var gridSize = 46;  // approximate number of squares across and down
+var m = 12;
+var gridSize = 54;  // approximate number of squares across and down
 var transitionTime = 500;
 var rows = 0;
 var operators = {
@@ -17,6 +18,9 @@ var operators = {
 };
 
 var operator = "*";
+var keyTime = 0,
+    numberBuffer = 0,
+    KEY_WAIT = 600;
 
 var squareDivHtml = function(a, b, m) {
     switch(operator) {
@@ -39,7 +43,7 @@ var squareDivHtml = function(a, b, m) {
 };
 
 var makeKey = function() {
-    var numbers = []
+    var numbers = [];
     for (var i = 0; i < m; i++) {
         numbers[i] = i;
     }
@@ -52,7 +56,7 @@ var makeKey = function() {
         });
     lis.exit()
         .remove();
-}
+};
 
 var chooseOperator = function(op) {
     operator = op;
@@ -155,4 +159,47 @@ var trigger = function(off) {
     
     var modtext = document.getElementById("modulus");
     modtext.innerHTML = m;
+};
+
+document.onkeydown = function(event) {
+    var e = event || window.event,
+        keycode = (e.which) ? e.which : e.keyCode,
+        LEFT = 37,
+        UP = 38,
+        RIGHT = 39,
+        DOWN = 40;  
+          
+    switch (keycode) {
+    case RIGHT:
+    case UP:
+        trigger(1);
+        break;
+    case LEFT:
+    case DOWN:
+        trigger(-1);
+        break;
+    }
+};
+
+document.onkeypress = function(e) {
+    var charCode = (typeof e.which === "number") ? e.which : e.keyCode,
+        operators = {42: '*', 94: '^', 43: '+'},
+        ZERO = 48;
+    if (charCode in operators) { 
+        chooseOperator(operators[charCode]);
+        return;
+    }
+    var number = charCode - ZERO,
+        time = new Date().getTime();
+    if (number >= 0 && number < 10) {
+        if (time - keyTime < KEY_WAIT) {
+            numberBuffer = numberBuffer * 10 + number;
+        } else {
+            numberBuffer = number;
+        }
+        if (numberBuffer >= min && numberBuffer <= max) {
+            trigger(numberBuffer - m);
+        }
+        keyTime = time;
+    }
 };
