@@ -74,3 +74,22 @@ svg#quilt {
     border-color: #111111;
     background: white;
 }
+#key {
+    list-style-type: None;
+    text-align: left;
+    padding: 10px;
+    margin-left: 60px;
+    font-size: 120%;
+}
+.keyBox {
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    margin: 3px;
+    vertical-align: middle;
+}
+.keyNum {
+    display: inline-block;
+    vertical-align: middle;
+    padding: .1em .2em;
+}

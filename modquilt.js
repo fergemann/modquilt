@@ -38,6 +38,22 @@ var squareDivHtml = function(a, b, m) {
     }
 };
 
+var makeKey = function() {
+    var numbers = []
+    for (var i = 0; i < m; i++) {
+        numbers[i] = i;
+    }
+    var lis = d3.select("#key").selectAll("li").data(numbers);
+    lis.enter()
+        .append("li")
+        .html(function(d) { 
+            return '<div class="keyBox" style="background: ' + colors[d] + 
+                   '"></div>' + '<div class="keyNum">' + d + '</class>';
+        });
+    lis.exit()
+        .remove();
+}
+
 var chooseOperator = function(op) {
     operator = op;
     trigger(0);
@@ -54,6 +70,7 @@ var trigger = function(off) {
     if (m < min) {
         m += (max-min)+1;
     }
+    makeKey();
     var patches = Math.floor(gridSize/(2*m));
     rows = patches * m + 1;
     d3.select("#quilt")
