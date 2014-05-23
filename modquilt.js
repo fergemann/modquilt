@@ -1,5 +1,6 @@
 /* global document, window, d3, NT */
 /* exported chooseOperator, trigger */
+var FLY_IN_AND_OUT = true;
 var min = 2;
 var max = 20;
 var colors = ['#000000', '#ffffff', '#000060', '#ff6657', '#00800f',
@@ -10,12 +11,24 @@ colors[NaN] = '#808080';
 
 var m = 19;
 var gridSize = 54;  // approximate number of squares across and down
-var transitionTime = 500;
+var transitionTime = 800;
 var rows = 0;
 var operators = {
-    "+": function(a, b, m) { return NT.mod(a+b, m); },
-    "*": function(a, b, m) { return NT.mod(a*b, m); },
-    "^": function(a, b, m) { return NT.powMod(a, b, m); }
+    "+": {
+        f: function(a, b, m) { return NT.mod(a+b, m); },
+        patchHeight: function() { return 1; },
+        patchWidth: function() { return 1; }
+    },
+    "*": { 
+        f: function(a, b, m) { return NT.mod(a*b, m); },
+        patchHeight: function(m) { return m; },
+        patchWidth: function(m) { return m; }
+    },
+    "^": {
+        f: function(a, b, m) { return NT.powMod(a, b, m); },
+        patchHeight: function(m) { return NT.phi(m); },
+        patchWidth: function(m) { return m; }
+    }
 };
 
 var operator = "*";
@@ -27,12 +40,12 @@ var squareDivHtml = function(a, b, m) {
     switch(operator) {
         case "+":
             return a + " + " + b + " &equiv; " + 
-                   operators["+"](a,b,m) + " mod " + m;
+                   operators["+"].f(a,b,m) + " mod " + m;
         case "*":
             return a + " &times; " + b + " &equiv; " + 
-                   operators["*"](a,b,m) + " mod " + m;
+                   operators["*"].f(a,b,m) + " mod " + m;
         case "^":
-            var c = operators["^"](a,b,m);
+            var c = operators["^"].f(a,b,m);
             var aParen = (a < 0) ? '('+a+')' : a;
             if (isNaN(c)) {
                 return aParen + '<sup>' + b  + '</sup> is undefined mod ' + m;
@@ -76,8 +89,11 @@ var trigger = function(off) {
         m += (max-min)+1;
     }
     makeKey();
-    var patches = Math.floor(gridSize/(2*m));
-    rows = patches * m + 1;
+    var patchHeight = operators[operator].patchHeight(m);
+    var patchWidth = operators[operator].patchWidth(m);
+    rows = Math.floor(gridSize/(2*patchHeight)) * patchHeight + 1;
+    var cols = Math.floor(gridSize/(2*patchWidth)) * 
+               patchWidth + (operator !== "^");
     d3.select("#quilt")
         .transition()
         .duration(transitionTime)
@@ -85,10 +101,8 @@ var trigger = function(off) {
                          " " + (gridSize+1) + " " + (gridSize+1));
     var infoDiv = d3.select("#squareInfo");
     
-    var getXCoord = function(d) { return d.x - 0.5; };
-    var getYCoord = function(d) { return d.y - 0.5; };
     var getColor = function(d) { 
-        return colors[operators[operator](d.x, d.y, m)]; 
+        return colors[operators[operator].f(d.x, d.y, m)]; 
     };
     var mouseOverHandler =  function (d) {
         //prevent info div from falling off page
@@ -113,10 +127,19 @@ var trigger = function(off) {
     };
 
     
+    var getXCoord = function(d) { return d.x - 0.5; };
+    var getYCoord = function(d) { return d.y - 0.5; };
+    var getStartXCoord = function(d) { 
+        return d.x * (1 + 3*FLY_IN_AND_OUT) - 0.5;
+    };
+    var getStartYCoord = function(d) { 
+        return d.y * (1 + 3*FLY_IN_AND_OUT) - 0.5;
+    };
+    
     for (var y = 0;  y < Math.max(rows, oldRows); y++) {
         var data = [];
         if (y < rows) {
-            for (var x = 0; x < rows; x++) {
+            for (var x = 0; x < cols; x++) {
                 data.push({x:x, y:y});
                 if (y > 0) {
                     data.push({x:x, y:-y});
@@ -134,8 +157,8 @@ var trigger = function(off) {
         rects.enter()
             .append("rect")
             .attr("class", "row"+y)
-//             .attr("x", function(d) { return 4*d.x })
-//             .attr("y", function(d) { return 4*d.y })
+            .attr("x", getStartXCoord)
+            .attr("y", getStartYCoord)
             .style("opacity",0);
         rects.transition()
             .duration(transitionTime)
@@ -150,8 +173,8 @@ var trigger = function(off) {
         rects.exit()
             .transition()
             .duration(transitionTime)
-//             .attr("x", function(d) { return 4*d.x; })
-//             .attr("y", function(d) { return 4*d.y; })
+            .attr("x", getStartXCoord)
+            .attr("y", getStartYCoord)
             .style("opacity",0)
             .remove();
     }
