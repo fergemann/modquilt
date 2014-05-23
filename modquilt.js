@@ -1,6 +1,6 @@
 /* global document, window, d3, NT */
 /* exported chooseOperator, trigger */
-var FLY_IN_AND_OUT = true;
+var flyInAndOut = false;
 var min = 2;
 var max = 20;
 var colors = ['#000000', '#ffffff', '#000060', '#ff6657', '#00800f',
@@ -70,6 +70,7 @@ var makeKey = function() {
         });
     lis.exit()
         .remove();
+    d3.select("#modInfo").html("&Phi;("+m+") = "+NT.phi(m));
 };
 
 var chooseOperator = function(op) {
@@ -130,10 +131,10 @@ var trigger = function(off) {
     var getXCoord = function(d) { return d.x - 0.5; };
     var getYCoord = function(d) { return d.y - 0.5; };
     var getStartXCoord = function(d) { 
-        return d.x * (1 + 3*FLY_IN_AND_OUT) - 0.5;
+        return d.x * (1 + 3*flyInAndOut) - 0.5;
     };
     var getStartYCoord = function(d) { 
-        return d.y * (1 + 3*FLY_IN_AND_OUT) - 0.5;
+        return d.y * (1 + 3*flyInAndOut) - 0.5;
     };
     
     for (var y = 0;  y < Math.max(rows, oldRows); y++) {
@@ -207,11 +208,14 @@ document.onkeydown = function(event) {
 
 document.onkeypress = function(e) {
     var charCode = (typeof e.which === "number") ? e.which : e.keyCode,
-        operators = {42: '*', 94: '^', 43: '+'},
         ZERO = 48;
-    if (charCode in operators) { 
-        chooseOperator(operators[charCode]);
+    var char = String.fromCharCode(charCode);
+    if (char in operators) {
+        chooseOperator(char);
         return;
+    }
+    if (char === 't' || char === 'T') {
+        flyInAndOut = !flyInAndOut;
     }
     var number = charCode - ZERO,
         time = new Date().getTime();
