@@ -3,15 +3,15 @@
 var flyInAndOut = false;
 var min = 2;
 var max = 20;
-var colors = ['#000000', '#ffffff', '#000060', '#ff6657', '#00800f',
-              '#dd7500', '#1000b0', '#7020a0', '#c00020', '#b040a0',
+var colors = ['#000000', '#ffffff', '#000080', '#ff6657', '#00800f',
+              '#dd7500', '#2010d0', '#80d000', '#c00020', '#7020a0',
               '#ddcc00', '#c0c0c0', '#4060d0', '#ff8f77', '#60b050',
-              '#ee9510', '#60a0ff', '#a060f0', '#ff90a0', '#ff80ee'];
+              '#ee9510', '#60a0ff', '#c0e090', '#ff90a0', '#ff80ee'];
 colors[NaN] = '#808080';
 
 var m = 19;
 var gridSize = 54;  // approximate number of squares across and down
-var transitionTime = 800;
+var transitionTime = 0;
 var rows = 0;
 var operators = {
     "+": {
