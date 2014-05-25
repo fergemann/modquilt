@@ -250,6 +250,7 @@ document.onkeypress = function(e) {
     }
     if (char === 't' || char === 'T') {
         flyInAndOut = !flyInAndOut;
+        transitionTime = 1000 - transitionTime;
     }
     var number = charCode - ZERO,
         time = new Date().getTime();
