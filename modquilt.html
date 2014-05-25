@@ -12,7 +12,7 @@
 <body onload="trigger(1);">
   <div id="controls"> 
     <div id="modulus" onclick="trigger(1);"> </div>
-    <div>
+    <div id="buttonDiv">
       <span id="buttons">
           <button onclick="trigger(-1);" title="back">&lt;&lt;</button> 
           <button id="plusButton" onclick="chooseOperator('+');" title="addition">+</button>
@@ -20,6 +20,16 @@
           <button id="powerButton" onclick="chooseOperator('^');" title="exponentiaion">^</button>
           <button onclick="trigger(1);" title="forward">&gt;&gt;</button>
       </span>
+    </div>
+    <div id="options">
+      Show:
+      <select id="filterMode" onchange="trigger(0);">
+        <option value="all">All</option>
+        <option value="zero and one">Zero and One</option>
+        <option value="factors">Factors</option>
+        <option value="coprime">Coprime numbers</option>
+        <option value="primitive">Primitive Roots</option>
+      </select>
     </div>
     <ul id="key"></ul>
     <div id="modInfo"></div>

@@ -3,11 +3,11 @@
 var flyInAndOut = false;
 var min = 2;
 var max = 20;
-var colors = ['#000000', '#ffffff', '#000080', '#ff6657', '#00800f',
+var COLORS = ['#000000', '#ffffff', '#000080', '#ff6657', '#00800f',
               '#dd7500', '#2010d0', '#80d000', '#c00020', '#7020a0',
               '#ddcc00', '#c0c0c0', '#4060d0', '#ff8f77', '#60b050',
               '#ee9510', '#60a0ff', '#c0e090', '#ff90a0', '#ff80ee'];
-colors[NaN] = '#808080';
+COLORS[NaN] = '#808080';
 
 var m = 19;
 var gridSize = 54;  // approximate number of squares across and down
@@ -56,15 +56,15 @@ var squareDivHtml = function(a, b, m) {
     }
 };
 
-var makeKey = function() {
+var makeKey = function(colors) {
     var numbers = [];
     for (var i = 0; i < m; i++) {
         numbers[i] = i;
     }
     var lis = d3.select("#key").selectAll("li").data(numbers);
     lis.enter()
-        .append("li")
-        .html(function(d) { 
+        .append("li");
+    lis.html(function(d) { 
             return '<div class="keyBox" style="background: ' + colors[d] + 
                    '"></div>' + '<div class="keyNum">' + d + '</class>';
         });
@@ -78,6 +78,43 @@ var chooseOperator = function(op) {
     trigger(0);
 };
 
+var filterColors = function() {
+    var filter = {
+        "all": function() { return true; },
+        "factors": function(n) { return m % n === 0; },
+        "zero and one": function(n) { return n === 0 || n === 1; },
+        "coprime": function(n) { return NT.lineq(n, m).g === 1; },
+        "primitive": function(n) { 
+            if (NT.lineq(n, m).g !== 1) {
+                return false;
+            }
+            var isPower = [];
+            for (var i = 0; i < m; i++) {
+                isPower[i] = 0;
+            }
+            for (i = 1; i < m; i++) {
+                isPower[NT.powMod(n,i,m)] = 1;
+            }
+            var count = 0;
+            for (i = 1; i < m; i++) {
+                count += isPower[i];
+            }
+            return count === NT.phi(m);
+        }
+    }[document.getElementById("filterMode").value];
+    
+    var colors = [];
+    for (var n = 0; n < COLORS.length; n++) {
+        if (filter(n)) {
+            colors[n] = COLORS[n];
+        } else {
+            colors[n] = COLORS[NaN];
+        }
+    }
+    colors[NaN] = COLORS[NaN];
+    return colors;
+};
+
 var trigger = function(off) {
     d3.selectAll(".selectedOperator").classed("selectedOperator", false);
     var buttonIds = {"+":"#plusButton", 
@@ -89,7 +126,8 @@ var trigger = function(off) {
     if (m < min) {
         m += (max-min)+1;
     }
-    makeKey();
+    var colors = filterColors();
+    makeKey(colors);
     var patchHeight = operators[operator].patchHeight(m);
     var patchWidth = operators[operator].patchWidth(m);
     rows = Math.floor(gridSize/(2*patchHeight)) * patchHeight + 1;
@@ -190,17 +228,13 @@ document.onkeydown = function(event) {
     var e = event || window.event,
         keycode = (e.which) ? e.which : e.keyCode,
         LEFT = 37,
-        UP = 38,
-        RIGHT = 39,
-        DOWN = 40;  
-          
+        RIGHT = 39;
+                  
     switch (keycode) {
     case RIGHT:
-    case UP:
         trigger(1);
         break;
     case LEFT:
-    case DOWN:
         trigger(-1);
         break;
     }

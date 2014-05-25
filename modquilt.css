@@ -20,6 +20,9 @@ div {
     color: white;
     text-shadow: black 2px 2px 1px, black -2px 2px 1px, black -2px -2px 1px, black 2px -2px 1px, black 0px 2px 1px, black 2px 0px 1px, black 0px -2px 1px, black -2px 0px 1px;
 }
+#buttonDiv {
+    margin-bottom: 15px;
+}
 span#buttons {
     background-color: #bbb;
     border-radius: 1em;
@@ -78,6 +81,7 @@ svg#quilt {
     list-style-type: None;
     text-align: left;
     padding: 10px;
+    margin-top: 0;
     margin-left: 60px;
     margin-bottom: 10px;
     font-size: 120%;
