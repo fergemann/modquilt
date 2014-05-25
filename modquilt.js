@@ -82,7 +82,8 @@ var filterColors = function() {
     var filter = {
         "all": function() { return true; },
         "factors": function(n) { return m % n === 0; },
-        "zero and one": function(n) { return n === 0 || n === 1; },
+        "zero": function(n) { return n === 0; },
+        "zero one negative one": function(n) { return n <= 1 || n === m-1; },
         "coprime": function(n) { return NT.lineq(n, m).g === 1; },
         "primitive": function(n) { 
             if (NT.lineq(n, m).g !== 1) {
